@@ -1,0 +1,82 @@
+:root {
+  --color-primary: #4793af;
+  --color-secondary: #ffc470;
+  --color-tertiary: #dd5746;
+
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --large-text: 1.8rem;
+
+  --side-padding: 14vw;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+html {
+  background-color: var(--color-black);
+  scroll-behavior: auto;
+}
+
+fieldset {
+  border: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+input {
+  font-size: 0.9rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 500;
+}
+
+h1 {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+h3 {
+  font-size: var(--large-text);
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+p {
+  font-size: 1.2rem;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: var(--color-primary);
+}
+
+strong {
+  color: var(--color-tertiary);
+}
+
+.anchored {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+}
+
+.drop-anchor {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
