@@ -6,11 +6,15 @@ import {
   useScroll,
   useTransform,
 } from 'framer-motion';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import { HorizontalBars } from './HorizontalBars';
+import { returnSummationText } from '@/utils/text';
+import Move from '../icons/Move';
+import Link from 'next/link';
+import { ExternalLinkIcon } from '@radix-ui/react-icons';
 
-export default function Slider() {
+const Slider = ({ projects, selectedProjectId, setSelectedProjectId }) => {
   const [displayStyle, setDisplayStyle] = useState('flex');
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -69,35 +73,78 @@ export default function Slider() {
       >
         <MainProjectContainer>
           <h1>PROJECTS</h1>
-          <LargeProjectCard>
+          <LargeProjectCard
+            $selected={selectedProjectId === projects[0].id}
+          >
             <LargeProjectContent>
               <header>
-                <h3>Project Title</h3>
-                <p>Date</p>
+                <h3>{projects[0].title}</h3>
+                <p>
+                  Delivered on{' '}
+                  {projects[0].date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
               </header>
               <p>
-                Made using <strong>Technology</strong>
+                Made using{' '}
+                {projects[0].technology.map((tech, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      <strong>{tech}</strong>
+                      {returnSummationText(projects[0].technology, index)}
+                    </React.Fragment>
+                  );
+                })}
               </p>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Suspendisse varius enim in eros elementum tristique.
-              </p>
+              <p>{projects[0].description}</p>
+              <ButtonGroup>
+                <BaseButton
+                  color={'var(--color-primary)'}
+                  onClick={() => setSelectedProjectId(projects[0].id)}
+                >
+                  More details
+                  <Move size={'2rem'} />
+                </BaseButton>
+                <ButtonLink
+                  href={projects[0].external}
+                  color={'var(--color-tertiary)'}
+                  target="_blank"
+                >
+                  Go to website
+                  <ExternalLinkIcon
+                    width={'2rem'}
+                    height={'2rem'}
+                  />
+                </ButtonLink>
+              </ButtonGroup>
             </LargeProjectContent>
-            <LargeProjectImage>
+            <LargeProjectImage
+              onClick={() => setSelectedProjectId(projects[0].id)}
+            >
+              <Move />
               <Image
-                src="https://via.placeholder.com/300x300"
+                src={projects[0].images[1]}
                 alt="Project"
                 fill={true}
               />
             </LargeProjectImage>
           </LargeProjectCard>
         </MainProjectContainer>
-        <HorizontalBars />
+        <HorizontalBars
+          projects={projects}
+          selectedProjectId={selectedProjectId}
+          setSelectedProjectId={setSelectedProjectId}
+        />
       </MainSliderMotion>
       <HorizontalReference ref={horizontalRef} />
     </SliderContainer>
   );
-}
+};
+
+export default Slider;
 
 const LayoutContainer = styled.div``;
 
@@ -106,7 +153,7 @@ const SliderContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  padding-bottom: 800vh;
+  padding-bottom: 790vh;
   position: relative;
   overflow: hidden;
 `;
@@ -138,23 +185,9 @@ const MainProjectContainer = styled(LayoutContainer)`
 
 const MainSliderMotion = styled(motion.div)`
   padding-top: 10vh;
+  width: 100%;
   &.anchored {
     top: 35vh;
-  }
-`;
-
-const LargeProjectCard = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  width: calc(100% - var(--side-padding) * 2);
-  background-color: var(--color-white);
-  position: relative;
-  z-index: 1;
-  height: 100%;
-  margin: 0 auto;
-
-  &.anchored {
-    left: var(--side-padding);
   }
 `;
 
@@ -168,11 +201,79 @@ const LargeProjectContent = styled.div`
 const LargeProjectImage = styled.figure`
   overflow: hidden;
   position: relative;
+  box-shadow: inset 0px 0px 31px 0px rgba(0, 0, 0, 0.75);
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    z-index: -1;
+  }
+
+  svg {
+    position: absolute;
+    right: 2rem;
+    top: 2rem;
+    z-index: 1;
+    transition: scale 0.3s;
+  }
+
+  &:hover {
+    cursor: pointer;
+    svg {
+      scale: 1.2;
+    }
+  }
+`;
+
+const LargeProjectCard = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: calc(100% - var(--side-padding) * 2);
+  background-color: var(--color-white);
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  margin: 0 auto;
+  transition: scale 0.3s;
+
+  ${(props) =>
+    props.$selected &&
+    `
+      z-index: 100;
+      cursor: default;
+    `}
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-white);
+    z-index: 500;
+    opacity: 0;
+    transition:
+      scale 1.3s,
+      opacity 0.5s;
+    pointer-events: none;
+
+    ${(props) =>
+      props.$selected &&
+      `
+        pointer-events: unset;
+        opacity: 1;
+        scale: 4;
+      `}
+  }
+
+  &:hover {
+    scale: 1.02;
+  }
+
+  &.anchored {
+    left: var(--side-padding);
   }
 `;
 
@@ -181,4 +282,49 @@ const HorizontalReference = styled.div`
   top: calc(50vh - 15vh);
   width: 10rem;
   height: 800vh;
+`;
+
+const BaseButton = styled.button`
+  background-color: ${(props) => props.color};
+  color: var(--color-white);
+  height: 4rem;
+  padding: 0 1rem;
+  font-size: 1.4rem;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:hover {
+    background-color: var(--color-primary-dark);
+  }
+`;
+
+const ButtonLink = styled(Link)`
+  background-color: ${(props) => props.color};
+  color: var(--color-white);
+  height: 4rem;
+  padding: 0 1rem;
+  font-size: 1.4rem;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: var(--color-tertiary-dark);
+  }
+`;
+
+const ButtonGroup = styled.div`
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `;
