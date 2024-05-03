@@ -1,10 +1,10 @@
 'use client';
-import Slider from '@/components/organisms/Slider';
+import Slider from '@/components/organisms/slider';
 import { Contact } from '@/components/organisms/Contact';
 import DetailPage from '@/components/organisms/DetailPage';
 import styled from 'styled-components';
-import { useEffect, useRef, useState } from 'react';
-import { useScroll, useTransform } from 'framer-motion';
+import { useEffect, useState } from 'react';
+// import { useScroll, useTransform } from 'framer-motion';
 
 const projectData = [
   {
@@ -92,14 +92,14 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showBackground]);
 
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end'],
-  });
-  const opacity = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
+  // const ref = useRef(null);
+  // const { scrollYProgress } = useScroll({
+  //   target: ref,
+  //   offset: ['start end', 'end'],
+  // });
+  // const opacity = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
 
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
+  // const scale = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
   return (
     <main style={{ position: 'relative' }}>
       {showBackground && (
