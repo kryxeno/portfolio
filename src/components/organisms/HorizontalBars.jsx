@@ -185,7 +185,7 @@ const Hobby = styled(Cell)`
 
 const CategoryTitle = styled.h1`
   color: var(--color-white);
-  font-size: 11rem;
+  font-size: 19vh;
   font-family: 'acier-bat-noir', sans-serif;
   font-weight: 400;
   font-style: normal;
@@ -193,6 +193,7 @@ const CategoryTitle = styled.h1`
   position: absolute;
   top: -0.5rem;
   translate: -15rem;
-  writing-mode: sideways-lr;
-  text-orientation: mixed;
+  rotate: -90deg;
+  translate: -65%;
+  top: 30.5vh;
 `;
