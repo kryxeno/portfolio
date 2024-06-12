@@ -8,7 +8,7 @@ import {
   LinkedInLogoIcon,
 } from '@radix-ui/react-icons';
 
-export const Contact = () => {
+export const Contact = ({ isMobile }) => {
   const [contactVisible, setContactVisible] = useState(false);
   const contactRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -24,7 +24,7 @@ export const Contact = () => {
     <SectionContainer>
       <ContactReference ref={contactRef} />
       <ContactContainer
-        className={`drop-anchor ${contactVisible ? 'show' : ''}`}
+        className={`${!isMobile ? 'drop-anchor' : 'nothing'} ${contactVisible ? 'show' : ''}`}
       >
         <h1
           className={`nodelay ${contactVisible ? 'visible' : 'invisible'}`}
@@ -133,6 +133,24 @@ const ContactContainer = styled.div`
     left: -5.3rem;
     top: 2rem;
   }
+
+  @media (max-width: 1200px) {
+    h1 {
+      font-size: 10rem;
+      top: 3rem;
+    }
+  }
+
+  @media (max-width: 800px) {
+    display: flex;
+    height: 80vh;
+
+    h1 {
+      font-size: clamp(4rem, 14vw, 12rem);
+      inset: 0;
+      padding: 0 5vw;
+    }
+  }
 `;
 
 const LinksContainer = styled.div`
@@ -151,6 +169,10 @@ const LinksContainer = styled.div`
 
   ul {
     padding-left: 7.5rem;
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     li,
     li a {
       color: var(--color-primary);
@@ -161,12 +183,34 @@ const LinksContainer = styled.div`
       align-items: center;
     }
   }
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 800px) {
+    padding: 8rem 7vw;
+
+    p,
+    li a,
+    li {
+      font-size: clamp(1.2rem, 5vw, var(--large-text));
+    }
+
+    ul {
+      padding-left: 0;
+    }
+  }
 `;
 
 const SectionContainer = styled.section`
   height: 1px;
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 800px) {
+    height: unset;
+  }
 `;
 
 const ContactReference = styled.div`

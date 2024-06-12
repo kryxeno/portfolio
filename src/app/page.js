@@ -4,7 +4,9 @@ import { Contact } from '@/components/organisms/Contact';
 import DetailPage from '@/components/organisms/DetailPage';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-// import { useScroll, useTransform } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import Nextjs from '@/components/icons/Nextjs';
+import { CursorArrowIcon, PersonIcon } from '@radix-ui/react-icons';
 
 const projectData = [
   {
@@ -61,6 +63,16 @@ const projectData = [
     images: ['/rmdd.jpg', '/rmdd2.jpg', '/rmdd3.jpg'],
     download: '/rmdd_screenflow.pdf',
   },
+  {
+    id: '6',
+    title: 'Taakmeneertjes (a show on youtube)',
+    technology: ['Premiere Pro'],
+    date: new Date('2024-03-05'),
+    description:
+      'I made a show on youtube with my friends. It is the format of a show called taskmaster. We did this for fun and to learn how to make a show. It was a lot of fun to make and we learned a lot.',
+    images: ['/taakmeneertjes.jpg'],
+    external: 'https://www.youtube.com/watch?v=J_6XQ_izPl8&t=41s',
+  },
 ];
 
 const Home = () => {
@@ -79,7 +91,7 @@ const Home = () => {
         setShowDetail(true);
         window.scrollTo(0, 0);
         setShowBackground(false);
-      }, 1000);
+      }, 600);
     } else {
       setShowBackground(true);
       setShowDetail(false);
@@ -92,14 +104,26 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showBackground]);
 
-  // const ref = useRef(null);
-  // const { scrollYProgress } = useScroll({
-  //   target: ref,
-  //   offset: ['start end', 'end'],
-  // });
-  // const opacity = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
+  const [isMobile, setIsMobile] = useState(true);
 
-  // const scale = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(() => {
+        const newIsMobile = window.innerWidth < 800;
+        return newIsMobile;
+      });
+    };
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <main style={{ position: 'relative' }}>
       {showBackground && (
@@ -110,8 +134,7 @@ const Home = () => {
           <HeroContainer>
             <TitleContainer>
               <p>
-                Hello! my name is <strong>Tim van Ingen</strong>, and
-                I&apos;m a
+                My name is <strong>Tim van Ingen</strong>, and I&apos;m a
               </p>
               <h1>CREATIVE FRONT-END DEVELOPER</h1>
             </TitleContainer>
@@ -119,20 +142,35 @@ const Home = () => {
           <SpecialitiesContainer>
             <p>I specialize in:</p>
             <ul>
-              <li>Next.js / React</li>
-              <li>Interface Development</li>
-              <li>User Experience Design</li>
+              <li>
+                <Nextjs size="1.4rem" />
+                Next.js / React
+              </li>
+              <li>
+                <CursorArrowIcon
+                  height={'1.3rem'}
+                  width={'1.3rem'}
+                />
+                Interface Development
+              </li>
+              <li>
+                <PersonIcon
+                  height={'1.3rem'}
+                  width={'1.3rem'}
+                />
+                User Experience Design
+              </li>
             </ul>
           </SpecialitiesContainer>
           <Slider
             projects={projectData}
             selectedProjectId={selectedProjectId}
             setSelectedProjectId={updateProjectId}
+            isMobile={isMobile}
           />
-          <Contact />
+          <Contact isMobile={isMobile} />
         </Background>
       )}
-
       {showDetail && (
         <DetailPage
           projects={projectData}
@@ -140,6 +178,40 @@ const Home = () => {
           setSelectedProjectId={updateProjectId}
         />
       )}
+      <AnimatePresence>
+        {selectedProjectId && (
+          <motion.div
+            initial={{
+              top: '50%',
+              left: '50%',
+              width: '0%',
+              height: '0%',
+              opacity: 0,
+              translateX: '-50%',
+              translateY: '-50%',
+            }}
+            animate={{
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              opacity: 1,
+              translateX: 0,
+              translateY: 0,
+            }}
+            exit={{
+              opacity: 0,
+              scale: 0,
+            }}
+            transition={{ duration: 0.5 }}
+            style={{
+              position: 'fixed',
+              background: 'white',
+              zIndex: 190,
+            }}
+          />
+        )}
+      </AnimatePresence>
     </main>
   );
 };
@@ -161,17 +233,31 @@ const HelloContainer = styled.div`
   align-items: center;
 
   h1 {
+    translate: 0 1px;
     position: absolute;
     left: -2rem;
     font-size: 15rem;
     font-family: 'acier-bat-noir', sans-serif;
     font-weight: 400;
     font-style: normal;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 800px) {
+    height: 95px;
+
+    h1 {
+      font-size: 10rem;
+    }
   }
 `;
 
 const LayoutContainer = styled.div`
   padding: 0 var(--side-padding);
+
+  @media (max-width: 800px) {
+    padding: 0 10vw;
+  }
 `;
 
 const HeroContainer = styled(LayoutContainer)`
@@ -193,6 +279,22 @@ const TitleContainer = styled.section`
   p {
     font-size: var(--large-text);
   }
+
+  @media (max-width: 1200px) {
+    h1 {
+      font-size: 4rem;
+    }
+  }
+
+  @media (max-width: 800px) {
+    h1 {
+      font-size: clamp(2rem, 10vw, 4rem);
+    }
+
+    p {
+      font-size: clamp(0.9rem, 4vw, 1.2rem);
+    }
+  }
 `;
 
 const SpecialitiesContainer = styled(LayoutContainer)`
@@ -200,7 +302,7 @@ const SpecialitiesContainer = styled(LayoutContainer)`
   display: flex;
   gap: 0.5rem;
   padding-top: 15rem;
-  padding-bottom: 60vh;
+  padding-bottom: 30vh;
 
   font-size: var(--large-text);
 
@@ -209,7 +311,34 @@ const SpecialitiesContainer = styled(LayoutContainer)`
     font-size: inherit;
   }
 
-  ul li {
-    font-weight: 700;
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      white-space: nowrap;
+      svg {
+        display: inline-block;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  @media (max-width: 800px) {
+    flex-direction: column;
+    gap: 1rem;
+
+    p {
+      font-size: clamp(1.3rem, 4vw, var(--large-text));
+    }
+
+    ul li {
+      font-size: clamp(1.3rem, 4vw, var(--large-text));
+      white-space: normal;
+    }
   }
 `;

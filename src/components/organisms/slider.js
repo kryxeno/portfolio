@@ -14,7 +14,12 @@ import Move from '../icons/Move';
 import Link from 'next/link';
 import { ExternalLinkIcon } from '@radix-ui/react-icons';
 
-const Slider = ({ projects, selectedProjectId, setSelectedProjectId }) => {
+const Slider = ({
+  projects,
+  selectedProjectId,
+  setSelectedProjectId,
+  isMobile,
+}) => {
   const [displayStyle, setDisplayStyle] = useState('flex');
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -40,7 +45,7 @@ const Slider = ({ projects, selectedProjectId, setSelectedProjectId }) => {
   const leftOffset = useTransform(
     horizontalScrollYProgress,
     [0.02, 1],
-    ['0', '-700vh']
+    ['0', '-750vh']
   );
 
   useMotionValueEvent(horizontalScrollYProgress, 'change', (latest) => {
@@ -60,83 +65,94 @@ const Slider = ({ projects, selectedProjectId, setSelectedProjectId }) => {
           opacity: opacity,
           display: displayStyle,
           color: 'white',
+          zIndex: -100,
         }}
       >
-        <RecentProjectText>
-          My most recent public project:
-        </RecentProjectText>
+        {!isAnchorDropped && (
+          <RecentProjectText>
+            My most recent public project:
+          </RecentProjectText>
+        )}
       </motion.div>
       <MainSliderMotion
-        style={{ translateX: leftOffset }}
-        className={isAnchorDropped ? 'drop-anchor' : 'anchored'}
+        style={{ translateX: !isMobile ? leftOffset : 0 }}
+        className={
+          isMobile ? '' : isAnchorDropped ? 'drop-anchor' : 'anchored'
+        }
         ref={ref}
       >
-        <MainProjectContainer>
-          <h1>PROJECTS</h1>
-          <LargeProjectCard
-            $selected={selectedProjectId === projects[0].id}
-          >
-            <LargeProjectContent>
-              <header>
-                <h3>{projects[0].title}</h3>
+        {!isMobile && (
+          <MainProjectContainer>
+            <h1>PROJECTS</h1>
+            <LargeProjectCard
+              $selected={selectedProjectId === projects[0].id}
+            >
+              <LargeProjectContent>
+                <header>
+                  <h3>{projects[0].title}</h3>
+                  <p>
+                    Delivered on{' '}
+                    {projects[0].date.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </p>
+                </header>
                 <p>
-                  Delivered on{' '}
-                  {projects[0].date.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
+                  Made using{' '}
+                  {projects[0].technology.map((tech, index) => {
+                    return (
+                      <React.Fragment key={index}>
+                        <strong>{tech}</strong>
+                        {returnSummationText(
+                          projects[0].technology,
+                          index
+                        )}
+                      </React.Fragment>
+                    );
                   })}
                 </p>
-              </header>
-              <p>
-                Made using{' '}
-                {projects[0].technology.map((tech, index) => {
-                  return (
-                    <React.Fragment key={index}>
-                      <strong>{tech}</strong>
-                      {returnSummationText(projects[0].technology, index)}
-                    </React.Fragment>
-                  );
-                })}
-              </p>
-              <p>{projects[0].description}</p>
-              <ButtonGroup>
-                <BaseButton
-                  color={'var(--color-primary)'}
-                  onClick={() => setSelectedProjectId(projects[0].id)}
-                >
-                  More details
-                  <Move size={'2rem'} />
-                </BaseButton>
-                <ButtonLink
-                  href={projects[0].external}
-                  color={'var(--color-tertiary)'}
-                  target="_blank"
-                >
-                  Go to website
-                  <ExternalLinkIcon
-                    width={'2rem'}
-                    height={'2rem'}
-                  />
-                </ButtonLink>
-              </ButtonGroup>
-            </LargeProjectContent>
-            <LargeProjectImage
-              onClick={() => setSelectedProjectId(projects[0].id)}
-            >
-              <Move />
-              <Image
-                src={projects[0].images[1]}
-                alt="Project"
-                fill={true}
-              />
-            </LargeProjectImage>
-          </LargeProjectCard>
-        </MainProjectContainer>
+                <p>{projects[0].description}</p>
+                <ButtonGroup>
+                  <BaseButton
+                    color={'var(--color-primary)'}
+                    onClick={() => setSelectedProjectId(projects[0].id)}
+                  >
+                    More details
+                    <Move size={'1.5rem'} />
+                  </BaseButton>
+                  <ButtonLink
+                    href={projects[0].external}
+                    color={'var(--color-tertiary)'}
+                    target="_blank"
+                  >
+                    Go to website
+                    <ExternalLinkIcon
+                      width={'1.5rem'}
+                      height={'1.5rem'}
+                    />
+                  </ButtonLink>
+                </ButtonGroup>
+              </LargeProjectContent>
+              <LargeProjectImage
+                onClick={() => setSelectedProjectId(projects[0].id)}
+              >
+                <Move size="3rem" />
+                <Image
+                  src={projects[0].images[1]}
+                  alt="Project"
+                  fill={true}
+                />
+              </LargeProjectImage>
+            </LargeProjectCard>
+          </MainProjectContainer>
+        )}
         <HorizontalBars
           projects={projects}
           selectedProjectId={selectedProjectId}
           setSelectedProjectId={setSelectedProjectId}
+          isMobile={isMobile}
         />
       </MainSliderMotion>
       <HorizontalReference ref={horizontalRef} />
@@ -156,15 +172,25 @@ const SliderContainer = styled.div`
   padding-bottom: 790vh;
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 800px) {
+    padding-bottom: 30vh;
+  }
 `;
 
 const RecentProjectText = styled.h2`
+  position: relative;
   color: var(--color-white);
   width: 100%;
   text-align: center;
   font-size: 3rem;
   font-weight: 400;
   padding: 3rem 0;
+  user-select: none;
+
+  @media (max-width: 800px) {
+    font-size: 1.6rem;
+  }
 `;
 
 const MainProjectContainer = styled(LayoutContainer)`
@@ -186,6 +212,7 @@ const MainProjectContainer = styled(LayoutContainer)`
 const MainSliderMotion = styled(motion.div)`
   padding-top: 10vh;
   width: 100%;
+
   &.anchored {
     top: 35vh;
   }
@@ -196,6 +223,18 @@ const LargeProjectContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4rem;
+
+  @media (max-width: 1200px) {
+    padding: 2rem;
+
+    h3 {
+      font-size: clamp(1.2rem, 2vw, var(--large-text));
+    }
+
+    p {
+      font-size: clamp(1.1rem, 1.8vw, 1.2rem);
+    }
+  }
 `;
 
 const LargeProjectImage = styled.figure`
@@ -244,7 +283,7 @@ const LargeProjectCard = styled.div`
       cursor: default;
     `}
 
-  &::after {
+  /* &::after {
     content: '';
     position: absolute;
     top: 0;
@@ -260,13 +299,13 @@ const LargeProjectCard = styled.div`
     pointer-events: none;
 
     ${(props) =>
-      props.$selected &&
-      `
+    props.$selected &&
+    `
         pointer-events: unset;
         opacity: 1;
         scale: 4;
       `}
-  }
+  } */
 
   &:hover {
     scale: 1.02;
@@ -282,6 +321,12 @@ const HorizontalReference = styled.div`
   top: calc(50vh - 15vh);
   width: 10rem;
   height: 800vh;
+  user-select: none;
+  z-index: -1000;
+
+  @media (max-width: 800px) {
+    top: 0;
+  }
 `;
 
 const BaseButton = styled.button`
@@ -301,6 +346,12 @@ const BaseButton = styled.button`
   &:hover {
     background-color: var(--color-primary-dark);
   }
+
+  @media (max-width: 1200px) {
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    height: 3rem;
+    padding: 0 0.8rem;
+  }
 `;
 
 const ButtonLink = styled(Link)`
@@ -319,6 +370,12 @@ const ButtonLink = styled(Link)`
 
   &:hover {
     background-color: var(--color-tertiary-dark);
+  }
+
+  @media (max-width: 1200px) {
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    height: 3rem;
+    padding: 0 0.8rem;
   }
 `;
 
