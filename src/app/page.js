@@ -14,6 +14,7 @@ import SvelteIcon from '@/components/icons/SvelteIcon';
 import CsharpIcon from '@/components/icons/CsharpIcon';
 import PythonIcon from '@/components/icons/PythonIcon';
 import BrushIcon from '@/components/icons/BrushIcon';
+import Image from 'next/image';
 
 const projectData = [
   {
@@ -172,6 +173,14 @@ const Home = () => {
               </p>
               <h1>CREATIVE FRONT-END DEVELOPER</h1>
             </TitleContainer>
+            <figure>
+              <Image
+                src="/headshot.jpeg"
+                alt="Picture of the portfolio owner"
+                width={154 * 2}
+                height={205 * 2}
+              />
+            </figure>
           </HeroContainer>
           <SpecialitiesContainer>
             <div>
@@ -294,7 +303,6 @@ const HelloContainer = styled.div`
   position: relative;
   color: white;
   height: 150px;
-  overflow: hidden;
   display: flex;
   align-items: center;
 
@@ -330,9 +338,29 @@ const HeroContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 42rem;
+  height: 45rem;
   background: white;
   position: relative;
+
+  figure {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 250px;
+    height: 250px;
+    overflow: hidden;
+    border-radius: 50%;
+    outline: 1.5rem solid var(--color-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    translate: -50% 50%;
+
+    img {
+      object-fit: cover;
+    }
+  }
 `;
 
 const ScreenContainer = styled.div`
@@ -386,6 +414,8 @@ const TitleContainer = styled(LayoutContainer)`
     font-family: 'acier-bat-solid', sans-serif;
     font-weight: 400;
     font-style: normal;
+    z-index: 20;
+    position: relative;
   }
 
   p {
