@@ -14,10 +14,12 @@ export function useFollowPointer(ref, delay = 0, offset = 0) {
   const y = useSpring(yPoint, spring);
 
   useEffect(() => {
+    if (!ref) return;
     if (!ref.current) return;
 
     const handlePointerMove = ({ clientX, clientY }) => {
       const element = ref.current;
+      if (!element) return;
 
       frame.read(() => {
         xPoint.set(

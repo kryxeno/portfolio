@@ -22,7 +22,7 @@ const projectData = [
     date: new Date('2024-01-25'),
     technology: ['SvelteKit', 'Leaflet'],
     description:
-      'This project was made for the bike traffic visualisation of Amsterdam. The proposal was for a route planner with in-depth detail for all the obstacles on that route.',
+      'This school project was made for the bike traffic visualisation of Amsterdam. The proposal was for a route planner with in-depth detail for all the obstacles on that route.',
     images: [
       '/fietskruispunten.jpg',
       '/fietskruispunten2.jpg',
@@ -36,7 +36,7 @@ const projectData = [
     date: new Date('2023-11-30'),
     technology: ['NextJS', 'D3'],
     description:
-      'This project was made to visualise the launch timeline of SpaceX. The timeline is interactive and shows interesting figures in graphs.',
+      'This school project was made to visualise the launch timeline of SpaceX. The timeline is interactive and shows interesting figures in graphs.',
     images: ['/spacex.jpg', '/spacex2.jpg', '/spacex3.jpg'],
     external: 'https://tech-track-23-24-nine.vercel.app/ ',
   },
@@ -46,7 +46,7 @@ const projectData = [
     date: new Date('2022-12-16'),
     technology: ['Vanilla JS'],
     description:
-      'This project was made to clone the chess.com website. It features a chess board (working for singleplayer), as well as the front page of the website.',
+      'This school project was made to clone the chess.com website. It features a chess board (working for singleplayer), as well as the front page of the website.',
     images: ['/chess.jpg', '/chess2.jpg', '/chess3.jpg'],
     external: 'https://kryxeno.github.io/fakesite/chess.html',
   },
@@ -66,7 +66,7 @@ const projectData = [
     date: new Date('2023-01-23'),
     technology: ['Adobe XD', 'Illustrator'],
     description:
-      'This project was made to prototype a music studio app. The app has a desktop version and a mobile version, both with a different layout and function. The desktop is made to manage the studio session, while the mobile version belongs to a musician to manage his/her own sound.',
+      'This school project was made to prototype a music studio app. The app has a desktop version and a mobile version, both with a different layout and function. The desktop is made to manage the studio session, while the mobile version belongs to a musician to manage his/her own sound.',
     images: ['/rmdd.jpg', '/rmdd2.jpg', '/rmdd3.jpg'],
     download: '/rmdd_screenflow.pdf',
   },
