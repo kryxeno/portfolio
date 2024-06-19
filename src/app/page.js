@@ -3,10 +3,17 @@ import Slider from '@/components/organisms/slider';
 import { Contact } from '@/components/organisms/Contact';
 import DetailPage from '@/components/organisms/DetailPage';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Nextjs from '@/components/icons/Nextjs';
 import { CursorArrowIcon, PersonIcon } from '@radix-ui/react-icons';
+import { useFollowPointer } from '@/utils/useFollowPointer';
+import TypescriptIcon from '@/components/icons/TypescriptIcon';
+import MongoIcon from '@/components/icons/MongoIcon';
+import SvelteIcon from '@/components/icons/SvelteIcon';
+import CsharpIcon from '@/components/icons/CsharpIcon';
+import PythonIcon from '@/components/icons/PythonIcon';
+import BrushIcon from '@/components/icons/BrushIcon';
 
 const projectData = [
   {
@@ -124,6 +131,15 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const ref = useRef(null);
+  const ref2 = useRef(null);
+  const ref3 = useRef(null);
+  const screenOffset = 150;
+
+  const { x: x1, y: y1 } = useFollowPointer(ref, 0, screenOffset);
+  const { x: x2, y: y2 } = useFollowPointer(ref2, 30, screenOffset);
+  const { x: x3, y: y3 } = useFollowPointer(ref3, 60, screenOffset);
+
   return (
     <main style={{ position: 'relative' }}>
       {showBackground && (
@@ -132,35 +148,85 @@ const Home = () => {
             <h1>HELLO</h1>
           </HelloContainer>
           <HeroContainer>
+            <ScreenContainer>
+              <motion.div
+                ref={ref}
+                style={{ x: x1, y: y1 }}
+              />
+              <motion.div
+                ref={ref2}
+                style={{ x: x2, y: y2 }}
+              />
+              <motion.div
+                ref={ref3}
+                style={{ x: x3, y: y3 }}
+              />
+            </ScreenContainer>
             <TitleContainer>
               <p>
-                My name is <strong>Tim van Ingen</strong>, and I&apos;m a
+                <span>My</span> <span>name</span> <span>is</span>{' '}
+                <span>
+                  <strong>Tim van Ingen</strong>,
+                </span>{' '}
+                <span>and</span> <span>I&apos;m a</span>
               </p>
               <h1>CREATIVE FRONT-END DEVELOPER</h1>
             </TitleContainer>
           </HeroContainer>
           <SpecialitiesContainer>
-            <p>I specialize in:</p>
-            <ul>
-              <li>
-                <Nextjs size="1.4rem" />
-                Next.js / React
-              </li>
-              <li>
-                <CursorArrowIcon
-                  height={'1.3rem'}
-                  width={'1.3rem'}
-                />
-                Interface Development
-              </li>
-              <li>
-                <PersonIcon
-                  height={'1.3rem'}
-                  width={'1.3rem'}
-                />
-                User Experience Design
-              </li>
-            </ul>
+            <div>
+              <p>I specialize in:</p>
+              <ul>
+                <li>
+                  <Nextjs size="1.4rem" />
+                  Next.js / React
+                </li>
+                <li>
+                  <CursorArrowIcon
+                    height={'1.3rem'}
+                    width={'1.3rem'}
+                  />
+                  Interface Development
+                </li>
+                <li>
+                  <BrushIcon />
+                  Advanced CSS
+                </li>
+              </ul>
+            </div>
+            <div>
+              <p>I have experience with:</p>
+              <ul>
+                <li>
+                  <TypescriptIcon />
+                  Typescript
+                </li>
+                <li>
+                  <MongoIcon />
+                  MongoDB / Express
+                </li>
+                <li>
+                  <SvelteIcon />
+                  Svelte
+                </li>
+
+                <li>
+                  <CsharpIcon />
+                  C# / Unity
+                </li>
+                <li>
+                  <PythonIcon />
+                  Python
+                </li>
+                <li>
+                  <PersonIcon
+                    height={'1.3rem'}
+                    width={'1.3rem'}
+                  />
+                  User Experience Design
+                </li>
+              </ul>
+            </div>
           </SpecialitiesContainer>
           <Slider
             projects={projectData}
@@ -260,17 +326,63 @@ const LayoutContainer = styled.div`
   }
 `;
 
-const HeroContainer = styled(LayoutContainer)`
+const HeroContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 42rem;
   background: white;
+  position: relative;
 `;
 
-const TitleContainer = styled.section`
+const ScreenContainer = styled.div`
+  --color1: #f0f0f0;
+  --color2: #e0e0e0;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-tertiary-dark);
+  z-index: 1;
+  overflow: hidden;
+
+  div {
+    position: absolute;
+    width: 40rem;
+    height: 40rem;
+    border-radius: 50%;
+    background-color: var(--color-primary-dark);
+    transition: translate 1s;
+    z-index: 1;
+
+    &:nth-child(1) {
+      width: 15rem;
+      height: 15rem;
+      background-color: var(--color-primary);
+      z-index: 3;
+    }
+
+    &:nth-child(2) {
+      width: 30rem;
+      height: 30rem;
+      background-color: var(--color-tertiary);
+      z-index: 2;
+    }
+  }
+`;
+
+const TitleContainer = styled(LayoutContainer)`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  mix-blend-mode: screen;
+  background-color: var(--color-white);
+  z-index: 2;
+
   h1 {
-    font-size: 6rem;
+    font-size: 8rem;
     font-family: 'acier-bat-solid', sans-serif;
     font-weight: 400;
     font-style: normal;
@@ -278,6 +390,29 @@ const TitleContainer = styled.section`
 
   p {
     font-size: var(--large-text);
+
+    span {
+      opacity: 0;
+      transform: translateY(10%);
+      display: inline-block;
+      animation: rise 300ms cubic-bezier(0.87, 0, 0.04, 1) 200ms 1 forwards;
+
+      &:nth-child(2) {
+        animation-delay: 200ms;
+      }
+      &:nth-child(3) {
+        animation-delay: 400ms;
+      }
+      &:nth-child(4) {
+        animation-delay: 600ms;
+      }
+      &:nth-child(5) {
+        animation-delay: 800ms;
+      }
+      &:nth-child(6) {
+        animation-delay: 1000ms;
+      }
+    }
   }
 
   @media (max-width: 1200px) {
@@ -297,14 +432,35 @@ const TitleContainer = styled.section`
   }
 `;
 
+const generateAnimationDelays = (count, baseDelay = 1200, step = 200) => {
+  let styles = '';
+  for (let i = 1; i <= count; i++) {
+    styles += `
+      &:nth-child(${i}) {
+        animation-delay: ${baseDelay + step * i}ms;
+      }
+    `;
+  }
+  return styles;
+};
+
 const SpecialitiesContainer = styled(LayoutContainer)`
   color: white;
   display: flex;
-  gap: 0.5rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rem;
   padding-top: 15rem;
   padding-bottom: 30vh;
 
   font-size: var(--large-text);
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
 
   p {
     color: var(--color-secondary);
@@ -313,14 +469,20 @@ const SpecialitiesContainer = styled(LayoutContainer)`
 
   ul {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    gap: 5rem;
+    flex-wrap: wrap;
+    justify-content: center;
     li {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       font-weight: 700;
       white-space: nowrap;
+
+      animation: bob 5200ms ease-in-out 1200ms infinite;
+
+      ${generateAnimationDelays(6)}
+
       svg {
         display: inline-block;
         flex-shrink: 0;
@@ -329,9 +491,6 @@ const SpecialitiesContainer = styled(LayoutContainer)`
   }
 
   @media (max-width: 800px) {
-    flex-direction: column;
-    gap: 1rem;
-
     p {
       font-size: clamp(1.3rem, 4vw, var(--large-text));
     }

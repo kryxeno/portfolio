@@ -61,11 +61,13 @@ export const Contact = ({ isMobile }) => {
               </Link>
             </li>
             <li className={`delay4 ${contactVisible ? 'visible' : ''}`}>
-              <EnvelopeClosedIcon
-                width={'2rem'}
-                height={'2rem'}
-              />{' '}
-              timvaningen63@gmail.com
+              <Link href="mailto: timvaningen63@gmail.com">
+                <EnvelopeClosedIcon
+                  width={'2rem'}
+                  height={'2rem'}
+                />{' '}
+                timvaningen63@gmail.com
+              </Link>
             </li>
           </ul>
         </LinksContainer>
@@ -110,17 +112,6 @@ const ContactContainer = styled.div`
     opacity: 0;
     transform: translateY(10%);
     animation-delay: 1200ms;
-  }
-
-  @keyframes rise {
-    from {
-      opacity: 0;
-      transform: translateY(10%);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0%);
-    }
   }
 
   h1 {

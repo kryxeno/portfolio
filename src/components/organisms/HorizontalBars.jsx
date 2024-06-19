@@ -61,7 +61,7 @@ export const HorizontalBars = ({
         <Hobby
           $row={'2'}
           $column={'1'}
-          $color={'var(--color-tertiary)'}
+          $color={'var(--color-primary)'}
         >
           <Image
             src={'/guitar.png'}
@@ -98,7 +98,7 @@ export const HorizontalBars = ({
         <Hobby
           $row={'1'}
           $column={'1'}
-          $color={'var(--color-tertiary)'}
+          $color={'var(--color-primary)'}
         >
           <Image
             src={'/guitar.png'}
