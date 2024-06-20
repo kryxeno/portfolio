@@ -305,6 +305,7 @@ const HelloContainer = styled.div`
   height: 150px;
   display: flex;
   align-items: center;
+  overflow: hidden;
 
   h1 {
     translate: 0 1px;
@@ -321,7 +322,7 @@ const HelloContainer = styled.div`
     height: 95px;
 
     h1 {
-      font-size: 10rem;
+      font-size: 8rem;
     }
   }
 `;
@@ -359,6 +360,14 @@ const HeroContainer = styled.div`
 
     img {
       object-fit: cover;
+    }
+  }
+
+  @media (max-width: 800px) {
+    figure {
+      width: 200px;
+      height: 200px;
+      outline: 1rem solid var(--color-white);
     }
   }
 `;
@@ -527,7 +536,6 @@ const SpecialitiesContainer = styled(LayoutContainer)`
 
     ul li {
       font-size: clamp(1.3rem, 4vw, var(--large-text));
-      white-space: normal;
     }
   }
 `;
